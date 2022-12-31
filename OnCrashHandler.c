@@ -53,13 +53,13 @@ void OnCrashHandler(int signum)
 	struct tm *now = localtime(&t);
 	int nLen1 = sprintf(szLine, "#########################################################\n[%04d-%02d-%02d %02d:%02d:%02d][crash signal number:%d]\n", now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, now->tm_hour, now->tm_min, now->tm_sec, signum);
 
-	fwrite(szLine, 1, strlen(szLine), f);
+	fwrite(szLine, sizeof(char), strlen(szLine) + 1, f);
 
 #ifdef __linux
 	void *array[MAX_STACK_FRAMES];
 	size_t size = 0;
 	char **strings = NULL;
-	size_t i, j;
+	size_t i;
 
 	signal(signum, SIG_DFL);
 	size = backtrace(array, MAX_STACK_FRAMES);
@@ -68,23 +68,16 @@ void OnCrashHandler(int signum)
 
 	for (i = 0; i < size; ++i)
 	{
-#if 0
-			std::string symbol(strings[i]);
-			std::string::size_type pos1 = symbol.find_first_of("[");
-			std::string::size_type pos2 = symbol.find_last_of("]");
-			std::string address = symbo.substr(pos1 + 1, pos2 - pos1 -1);
-			char cmd[128] = {0, };
-			sprintf(cmd, "addr2line -e gameserver %p", address.c_str());
-			system(cmd);
-#endif
-		char szLine[512] = {
-			0,
-		};
+		memset(szLine, 0, sizeof(szLine));
 		sprintf(szLine, "%lu %s\n", i, strings[i]);
-		fwrite(szLine, 1, strlen(szLine), f);
+		fwrite(szLine, sizeof(char), strlen(szLine) + 1, f);
 		// fprintf(stderr, "%d %s\n",i, strings[i]);
 	}
-	free(strings);
+	if (NULL != strings)
+	{
+		free(strings);
+		strings = NULL;
+	}
 #endif // __linux
 
 	fflush(f);
