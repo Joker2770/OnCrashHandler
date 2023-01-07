@@ -53,7 +53,7 @@ void OnCrashHandler(int signum)
 	struct tm *now = localtime(&t);
 	int nLen1 = sprintf(szLine, "#########################################################\n[%04d-%02d-%02d %02d:%02d:%02d][crash signal number:%d]\n", now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, now->tm_hour, now->tm_min, now->tm_sec, signum);
 
-	fwrite(szLine, sizeof(char), strlen(szLine) + 1, f);
+	fwrite(szLine, sizeof(char), sizeof(char) * (strlen(szLine) + 1), f);
 
 #ifdef __linux
 	void *array[MAX_STACK_FRAMES];
@@ -70,7 +70,7 @@ void OnCrashHandler(int signum)
 	{
 		memset(szLine, 0, sizeof(szLine));
 		sprintf(szLine, "%lu %s\n", i, strings[i]);
-		fwrite(szLine, sizeof(char), strlen(szLine) + 1, f);
+		fwrite(szLine, sizeof(char), sizeof(char) * (strlen(szLine) + 1), f);
 		// fprintf(stderr, "%d %s\n",i, strings[i]);
 	}
 	if (NULL != strings)
