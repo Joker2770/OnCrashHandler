@@ -69,7 +69,7 @@ void OnCrashHandler(int signum)
 	for (i = 0; i < size; ++i)
 	{
 		memset(szLine, 0, sizeof(szLine));
-		sprintf(szLine, "%lu %s\n", i, strings[i]);
+		sprintf(szLine, "%zu %s\n", i, strings[i]);
 		fwrite(szLine, sizeof(char), sizeof(char) * strlen(szLine), f);
 		// fprintf(stderr, "%d %s\n",i, strings[i]);
 	}
