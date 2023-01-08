@@ -7,7 +7,7 @@
 
 /*
 	A crash handler for C/C++ on Windows and Linux.
-	Copyright (C) 2022 joker2770
+	Copyright (C) 2022-2023 joker2770
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
